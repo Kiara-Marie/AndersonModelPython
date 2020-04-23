@@ -1,0 +1,2 @@
+CAREFUL = False
+VERBOSE = False
