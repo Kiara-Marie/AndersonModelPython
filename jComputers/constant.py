@@ -3,7 +3,7 @@ from jComputer import JComputer
 
 class Constant(JComputer) :
   def __init__(self, nnOnly, t, rdep):
-    super(self, nnOnly)
+    super().__init__(nnOnly)
     self.t = t
     self.rdep = rdep
     if (rdep):
