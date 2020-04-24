@@ -5,18 +5,25 @@ import config
 
 class Simulation:
 
-  def __init__(self, W, iterations, num_sites, max_t, jComputer, energyComputer):
+  def __init__(self, W, iterations, num_sites, max_t, jComputer, 
+               energyComputer, metrics):
     self.W = W 
     self.iterations = iterations
     self.num_sites = num_sites
     self.max_t =  max_t
     self.jComputer = jComputer
     self.energyComputer = energyComputer
+    self.metrics = metrics
 
   def run(self):
     for iter in range(self.iterations):
       hamiltonian = self.createMatrix()
-      eigvals, eigvecs = scipy.linalg.eigh(hamiltonian, check_finite=config.CAREFUL, turbo=True)
+      eigvals, eigvecs = scipy.linalg.eigh(
+          hamiltonian, check_finite=config.CAREFUL, turbo=True)
+      for m in self.metrics:
+          m.save(eigvals, eigvecs, hamiltonian)
+    for m in self.metrics:
+        m.printResult()
 
 
   def createMatrix(self):
@@ -28,7 +35,7 @@ class Simulation:
       for xj in range(xi, self.num_sites):
         if (xi == xj):
           continue
-        j = self.jComputer(xi,xj)
+        j = self.jComputer.jFinder(xi,xj)
         hamiltonian[xi,xj] = j
         hamiltonian[xj,xi] = j
 

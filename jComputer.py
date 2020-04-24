@@ -1,5 +1,3 @@
-import numpy as np
-import scipy
 from abc import ABC, abstractmethod
 
 class JComputer(ABC):

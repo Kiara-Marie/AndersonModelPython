@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 class LevelSpacingStats:
 
@@ -6,12 +7,25 @@ class LevelSpacingStats:
     self.NUM_TO_SAVE = 100000
     self.num_sites = num_sites
     self.iterations = iterations
-    self.spacings = []
+    self.spacings = np.empty(self.NUM_TO_SAVE)
+    self.spacings[:] = np.NaN
+    self.currPos = 0
 
   def save(self, eigvals, eigvecs, hamiltonian):
-    # TODO
     diffs = eigvals[1:] - eigvals[0:-1]
     if (len(diffs) + len(self.spacings) < self.NUM_TO_SAVE):
-      self.spacings.append(diffs)
+        self.spacings[self.currPos:self.currPos + len(diffs)] = diffs
+        self.currPos = self.currPos + len(diffs)
+        if (self.currPos != self.NUM_TO_SAVE and 
+            (self.spacings[self.currPos] != np.NaN 
+             or self.spacings[self.currPos - 1] == np.NaN)):
+            raise Exception("Something went wrong in level spacings")
+            
+  def printResult(self, file_code):
+    filename = file_code + "-LevelSpacings.csv"
+    df = pd.DataFrame(self.spacings)
+    df.dropna()
+    df.to_csv(filename)
+      
 
 

@@ -5,9 +5,9 @@ import argparse
 import config
 
 from simClass import Simulation
-from jComputer import JComputer
-from jComputers.constant import Constant
-from energyComputers.uniformRandom import UniformRandomEnergies
+from jComputers import constant
+from energyComputers import uniformRandom
+from metrics import levelSpacings, sampleResults
 
 def main():
 
@@ -23,13 +23,19 @@ def main():
   max_t = vars(result)['mt']
   config.CAREFUL = vars(result)['c']
 
-  print("Running %d iterations for %d with W = %d, and max_t = %d" %(iterations,num_sites, W, max_t))
+  print("Running %d iterations for %d sites with W = %d, and max_t = %d" %(iterations,num_sites, W, max_t))
 
-  jComputer = Constant(nnOnly=True, t=max_t, rdep=True)
+  jComputer = constant.Constant(nnOnly=True, t=max_t, rdep=True)
 
-  energyComputer = UniformRandomEnergies(W, num_sites)
+  energyComputer = uniformRandom.UniformRandomEnergies(W, num_sites)
   
-  currSim = Simulation(W, iterations, num_sites, max_t, jComputer, energyComputer)
+  level_spacings = levelSpacings.LevelSpacingStats(num_sites, iterations)
+  sample_results = sampleResults.SampleResults(num_sites, iterations)
+  metrics = [level_spacings, sample_results]
+  
+  currSim = Simulation(W=W, iterations=iterations, num_sites=num_sites,
+                       max_t=max_t, jComputer=jComputer, 
+                       energyComputer=energyComputer, metrics=metrics)
   currSim.run()
 
 
