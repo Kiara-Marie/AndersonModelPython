@@ -16,7 +16,7 @@ class Simulation:
   def run(self):
     for iter in range(self.iterations):
       hamiltonian = self.createMatrix()
-      scipy.linalg.eigh(hamiltonian)
+      eigvals, eigvecs = scipy.linalg.eigh(hamiltonian, check_finite=config.CAREFUL, turbo=True)
 
 
   def createMatrix(self):
