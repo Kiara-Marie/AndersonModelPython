@@ -13,19 +13,19 @@ class LevelSpacingStats:
 
   def save(self, eigvals, eigvecs, hamiltonian):
     diffs = eigvals[1:] - eigvals[0:-1]
-    if (len(diffs) + len(self.spacings) < self.NUM_TO_SAVE):
-        self.spacings[self.currPos:self.currPos + len(diffs)] = diffs
+    if ((len(diffs) + self.currPos) < self.NUM_TO_SAVE):
+        self.spacings[self.currPos:(self.currPos + len(diffs))] = diffs
         self.currPos = self.currPos + len(diffs)
         if (self.currPos != self.NUM_TO_SAVE and 
-            (self.spacings[self.currPos] != np.NaN 
-             or self.spacings[self.currPos - 1] == np.NaN)):
-            raise Exception("Something went wrong in level spacings")
+            (not np.isnan(self.spacings[self.currPos]) 
+             or np.isnan(self.spacings[self.currPos - 1]))):
+          raise Exception("Something went wrong in level spacings")
             
   def printResult(self, file_code):
     filename = file_code + "-LevelSpacings.csv"
     df = pd.DataFrame(self.spacings)
     df.dropna()
-    df.to_csv(filename)
+    df.to_csv(filename, index=False)
       
 
 
