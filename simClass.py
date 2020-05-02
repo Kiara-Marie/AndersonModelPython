@@ -2,6 +2,7 @@ import numpy as np
 import scipy
 import scipy.linalg
 import config
+import datetime as datetime
 
 class Simulation:
 
@@ -20,10 +21,13 @@ class Simulation:
       hamiltonian = self.createMatrix()
       eigvals, eigvecs = scipy.linalg.eigh(
           hamiltonian, check_finite=config.CAREFUL, turbo=True)
+      print('Created Hamiltonian...')
       for m in self.metrics:
           m.save(eigvals, eigvecs, hamiltonian)
+    run_code = self.get_run_code()
+    file_prefix = "results/" + run_code
     for m in self.metrics:
-        m.printResult()
+        m.printResult(file_prefix)
 
 
   def createMatrix(self):
@@ -39,13 +43,17 @@ class Simulation:
         hamiltonian[xi,xj] = j
         hamiltonian[xj,xi] = j
 
-    if (config.CAREFUL and not (check_symmetric(hamiltonian))):
+    if (config.CAREFUL and not (self.check_symmetric(hamiltonian))):
       raise Exception("Hamiltonian was not symmetric!")
 
     return hamiltonian
 
 
    # from https://stackoverflow.com/questions/42908334/checking-if-a-matrix-is-symmetric-in-numpy
-  def check_symmetric(a, rtol=1e-05, atol=1e-08):
+  def check_symmetric(self, a, rtol=1e-05, atol=1e-08):
     return np.allclose(a, a.T, rtol=rtol, atol=atol)
+
+  def get_run_code(self):
+    currentDT = datetime.datetime.now()
+    return "%d_%d_%d_%d_%d_%d" % (currentDT.year, currentDT.month, currentDT.day, currentDT.hour, currentDT.minute, currentDT.second)
 

@@ -56,7 +56,7 @@ def get_settings(W_default, iterations_default, num_sites_default, max_t_default
 
   parser.add_argument('--c', '--careful', type=bool, nargs='?',
                         help = 'Whether to run extra (time consuming) checks to verify code is working properly', 
-                        action='store', default=False)
+                        action='store', default=True)
 
   result = parser.parse_args()
   return result
