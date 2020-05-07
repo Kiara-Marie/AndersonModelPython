@@ -1,5 +1,10 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import scipy
+import scipy.stats
+import config
+
 
 class LevelSpacingStats:
 
@@ -24,8 +29,36 @@ class LevelSpacingStats:
   def printResult(self, file_code):
     filename = file_code + "-LevelSpacings.csv"
     df = pd.DataFrame(self.spacings)
-    df.dropna()
+    df.dropna(inplace=True)
     df.to_csv(filename, index=False)
+    self.plotDistributions(df.to_numpy(), file_code)
+
+  def plotDistributions(data, file_code):
+    numBins = 20
+    otherDistGran = 0.05
+    mylinewidth = 3
+    
+    n,bins,patches = plt.hist(data, bins=numBins,density=True)
+
+    D = np.mean(data)
+
+    x = np.arange(0,np.max(bins),otherDistGran/np.max(bins))
+
+    wigner = ((np.pi * x) / (2*D*D))*np.exp((-np.pi/4)*(np.square(x)/(D*D)))
+    plt.plot(x,wigner,label='wigner',linewidth=mylinewidth)
+
+    poisson = (1/D)*np.exp(-x/D)
+    plt.plot(x,poisson,label='poisson',linewidth=mylinewidth)
+        
+    plt.legend(loc='upper right')
+    plt.title('Distribution of Spacing to Closest Energy')
+    
+    plt.savefig(file_code + "-LevelSpacingDistribution.svg")
+
+    # make sure you don't call show before you call save
+    if (config.SHOW):
+      plt.show()
+
       
 
 
