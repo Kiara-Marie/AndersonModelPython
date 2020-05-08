@@ -42,7 +42,7 @@ class LevelSpacingStats:
 
     D = np.mean(data)
 
-    x = np.arange(0,np.max(bins),otherDistGran/np.max(bins))
+    x = np.linspace(0,np.max(data), 300)
 
     wigner = ((np.pi * x) / (2*D*D))*np.exp((-np.pi/4)*(np.square(x)/(D*D)))
     plt.plot(x,wigner,label='wigner',linewidth=mylinewidth)
