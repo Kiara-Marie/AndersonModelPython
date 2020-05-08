@@ -1,5 +1,4 @@
 import numpy as np
-import scipy as scipy
 import argparse
 
 import config
@@ -22,6 +21,7 @@ def main():
   num_sites = vars(result)['s']
   max_t = vars(result)['mt']
   config.CAREFUL = vars(result)['c']
+  config.SHOW = vars(result)['show']
 
   print("Running %d iterations for %d sites with W = %d, and max_t = %d" %(iterations,num_sites, W, max_t))
 
@@ -56,6 +56,10 @@ def get_settings(W_default, iterations_default, num_sites_default, max_t_default
 
   parser.add_argument('--c', '--careful', type=bool, nargs='?',
                         help = 'Whether to run extra (time consuming) checks to verify code is working properly', 
+                        action='store', default=True)
+  
+  parser.add_argument('--show', type=bool, nargs='?',
+                        help = 'Whether to show any plots that are generated',
                         action='store', default=True)
 
   result = parser.parse_args()
