@@ -33,7 +33,7 @@ class LevelSpacingStats:
     df.to_csv(filename, index=False)
     self.plotDistributions(df.to_numpy(), file_code)
 
-  def plotDistributions(data, file_code):
+  def plotDistributions(self, data, file_code):
     numBins = 20
     otherDistGran = 0.05
     mylinewidth = 3
