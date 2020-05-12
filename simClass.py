@@ -4,16 +4,18 @@ import scipy.linalg
 import config
 import datetime as datetime
 
+from aboutRun import about_run
+
 class Simulation:
 
   def __init__(self, W, iterations, num_sites, max_t, jComputer, 
-               energyComputer, metrics):
+               energy_computer, metrics):
     self.W = W 
     self.iterations = iterations
     self.num_sites = num_sites
     self.max_t =  max_t
     self.jComputer = jComputer
-    self.energyComputer = energyComputer
+    self.energy_computer = energy_computer
     self.metrics = metrics
 
   def run(self):
@@ -26,12 +28,15 @@ class Simulation:
           m.save(eigvals, eigvecs, hamiltonian)
     run_code = self.get_run_code()
     file_prefix = "results/" + run_code
+    about_run(W=self.W, iterations=self.iterations, num_sites=self.num_sites,
+              max_t=self.max_t, jComputer=self.jComputer, 
+              energy_computer=self.energy_computer, file_prefix=file_prefix)
     for m in self.metrics:
         m.printResult(file_prefix)
 
 
   def createMatrix(self):
-    energies = self.energyComputer.getEnergies()
+    energies = self.energy_computer.get_energies()
 
     hamiltonian = np.diag(energies)
 

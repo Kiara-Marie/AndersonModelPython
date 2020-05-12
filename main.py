@@ -27,16 +27,17 @@ def main():
 
   jComputer = constant.Constant(nnOnly=True, t=max_t, rdep=True)
 
-  energyComputer = uniformRandom.UniformRandomEnergies(W, num_sites)
+  energy_computer = uniformRandom.UniformRandomEnergies(W, num_sites)
   
   level_spacings = levelSpacings.LevelSpacingStats(num_sites, iterations)
   sample_results = sampleResults.SampleResults(num_sites, iterations)
   metrics = [level_spacings, sample_results]
-  
-  currSim = Simulation(W=W, iterations=iterations, num_sites=num_sites,
+
+  curr_sim = Simulation(W=W, iterations=iterations, num_sites=num_sites,
                        max_t=max_t, jComputer=jComputer, 
-                       energyComputer=energyComputer, metrics=metrics)
-  currSim.run()
+                       energy_computer=energy_computer, metrics=metrics)
+
+  curr_sim.run()
 
 
 def get_settings(W_default, iterations_default, num_sites_default, max_t_default):
