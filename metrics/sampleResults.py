@@ -1,10 +1,12 @@
 import numpy as np
 import pandas as pd
+from abc import ABC
+from metrics.metric import Metric
 
-class SampleResults:
+class SampleResults(Metric):
 
   def __init__(self, num_sites, iterations, num_samples = 3):
-      self.num_sites = num_sites
+      super().__init__(num_sites, iterations)
       self.num_samples = min(num_samples, iterations)
       self.samples = pd.DataFrame()
       self.samples_so_far = 0

@@ -1,8 +1,12 @@
 from abc import ABC
-from jComputer import JComputer
+from jComputers.jComputer import JComputer
 
 class Constant(JComputer) :
   def __init__(self, nnOnly, t, rdep):
+    """ J_ij = t , or if rdep is true, J_ij = t/r^3
+    t - self-explanatory
+    rdep - whether or not to have J depend on r^3
+    """ 
     super().__init__(nnOnly)
     self.t = t
     self.rdep = rdep
