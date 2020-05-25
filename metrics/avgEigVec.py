@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from abc import ABC, abstractmethod
+import config
 from metrics.metric import Metric
 
 class AvgEigVec(Metric):
@@ -16,4 +17,5 @@ class AvgEigVec(Metric):
     filename = file_code + "-AverageEigenvectors.csv"
     np.multiply(self.avg_mat, (1/self.iterations), out=self.avg_mat)
     df = pd.DataFrame(self.avg_mat)
-    df.to_csv(filename)
+    if (config.SAVE):
+      df.to_csv(filename)

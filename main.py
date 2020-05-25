@@ -5,7 +5,7 @@ import config
 
 from simClass import Simulation
 from jComputers import constant
-from energyComputers import uniformRandom
+from energyComputers import uniformRandom, calculatedRandom
 from metrics import levelSpacings, sampleResults
 
 def main():
@@ -22,12 +22,13 @@ def main():
   max_t = vars(result)['mt']
   config.CAREFUL = vars(result)['c']
   config.SHOW = vars(result)['show']
+  config.SAVE = vars(result)['save']
 
   print("Running %d iterations for %d sites with W = %d, and max_t = %d" %(iterations,num_sites, W, max_t))
 
   jComputer = constant.Constant(nnOnly=True, t=max_t, rdep=True)
 
-  energy_computer = uniformRandom.UniformRandomEnergies(W, num_sites)
+  energy_computer = calculatedRandom.CalculatedRandomEnergies(num_sites)
   
   level_spacings = levelSpacings.LevelSpacingStats(num_sites, iterations)
   sample_results = sampleResults.SampleResults(num_sites, iterations)
@@ -61,6 +62,9 @@ def get_settings(W_default, iterations_default, num_sites_default, max_t_default
   
   parser.add_argument('--show', type=bool, nargs='?',
                         help = 'Whether to show any plots that are generated',
+                        action='store', default=True)
+  parser.add_argument('--save', type=bool, nargs='?',
+                        help = 'Whether to save results to file',
                         action='store', default=True)
 
   result = parser.parse_args()

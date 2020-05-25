@@ -34,7 +34,7 @@ class LevelSpacingStats(Metric):
     self.plotDistributions(df.to_numpy(), file_code)
 
   def plotDistributions(self, data, file_code):
-    numBins = 20
+    numBins = 30
     otherDistGran = 0.05
     mylinewidth = 3
     
@@ -52,8 +52,9 @@ class LevelSpacingStats(Metric):
         
     plt.legend(loc='upper right')
     plt.title('Distribution of Spacing to Closest Energy')
-    
-    plt.savefig(file_code + "-LevelSpacingDistribution.svg")
+
+    if (config.SAVE):
+      plt.savefig(file_code + "-LevelSpacingDistribution.svg")
 
     # make sure you don't call show before you call save
     if (config.SHOW):
