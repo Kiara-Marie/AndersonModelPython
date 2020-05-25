@@ -24,7 +24,7 @@ def main():
   config.SHOW = vars(result)['show']
   config.SAVE = vars(result)['save']
 
-  print("Running %d iterations for %d sites with W = %d, and max_t = %d" %(iterations,num_sites, W, max_t))
+  print("Running %d iterations for %d sites with W = %d, and max_t = %f" %(iterations,num_sites, W, max_t))
 
   jComputer = constant.Constant(nnOnly=True, t=max_t, rdep=True)
 

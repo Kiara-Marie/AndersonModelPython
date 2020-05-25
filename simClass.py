@@ -23,7 +23,6 @@ class Simulation:
       hamiltonian = self.createMatrix()
       eigvals, eigvecs = scipy.linalg.eigh(
           hamiltonian, check_finite=config.CAREFUL, turbo=True)
-      print('Created Hamiltonian...')
       for m in self.metrics:
           m.save(eigvals, eigvecs, hamiltonian)
     run_code = self.get_run_code()
