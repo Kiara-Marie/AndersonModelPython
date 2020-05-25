@@ -1,9 +1,11 @@
 import numpy.random as random
-class UniformRandomEnergies():
+from energyComputers.energyComputer import EnergyComputer
+
+class UniformRandomEnergies(EnergyComputer):
 
   def __init__(self, W, num_sites):
+    super().__init__(num_sites)
     self.W = W
-    self.num_sites = num_sites
     self.desc = "Onsite energies chosen from a uniform random distribution between -W/2 and W/2.\n"
 
   def get_energies(self):
