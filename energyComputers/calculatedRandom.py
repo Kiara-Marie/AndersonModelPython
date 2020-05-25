@@ -10,9 +10,12 @@ class CalculatedRandomEnergies(EnergyComputer):
     self.cache = pd.read_csv("EnergyCache.csv")
     print("hello")
 
-  def get_energies(self):
+  def compute_energies(self):
     probabilities = self.cache['degeneracy'] / sum(self.cache['degeneracy'])
-    self.energies = np.random.choice(self.cache[' delta E in R*Z m^-1'],self.num_sites,p=probabilities)   
+    self.energies = np.random.choice(self.cache[' delta E in R*Z m^-1'],self.num_sites,p=probabilities)
+
+  def get_energies(self):
+    self.compute_energies()
     return self.energies 
 
 
