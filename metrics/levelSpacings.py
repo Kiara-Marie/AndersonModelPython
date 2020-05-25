@@ -3,15 +3,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import scipy
 import scipy.stats
+from abc import ABC
 import config
+from metrics.metric import Metric
 
-
-class LevelSpacingStats:
+class LevelSpacingStats(Metric):
 
   def __init__(self, num_sites, iterations):
+    super().__init__(num_sites, iterations)
     self.NUM_TO_SAVE = 100000
-    self.num_sites = num_sites
-    self.iterations = iterations
     self.spacings = np.empty(self.NUM_TO_SAVE)
     self.spacings[:] = np.NaN
     self.currPos = 0

@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
+from energyComputers.energyComputer import EnergyComputer
 
-class CalculatedRandomEnergies():
+class CalculatedRandomEnergies(EnergyComputer):
 
-  def __init__(self, num_sites):
-      
-    self.num_sites = num_sites
+  def __init__(self,num_sites):
+    super().__init__(num_sites)  
     self.desc= "Energies randomly sampled from a weighted distribution based on the transition energies between Rydberg states\n"
     self.cache = pd.read_csv("EnergyCache.csv")
     print("hello")
