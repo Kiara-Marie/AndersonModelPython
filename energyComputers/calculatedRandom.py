@@ -1,17 +1,17 @@
 import numpy as np
+import pandas as pd
 
 class CalculatedRandomEnergies():
 
-  def __init__(self, desc ,num_sites):
+  def __init__(self, num_sites):
       
     self.num_sites = num_sites
-    self.desc=desc
-    #self.cache=cache  
-    #need to constrain the formmat of cache, for example, a matrix of [n,1], or which ever coveneint to build and load 
-    
+    self.desc= "Energies randomly sampled from a weighted distribution based on the transition energies between Rydberg states\n"
+    self.cache = pd.read_csv("EnergyCache.csv")
+    print("hello")
 
-  def getEnergies(self, cache_energies):
-    #cache_energies=self.cache[:,0]
+  def getEnergies(self):
+    probabilities = self.cache['degeneracy'] / sum(self.cache['degeneracy']);
     if self.desc == "calculated":
      self.cache_energies=np.ndarray.flatten(cache_energies) 
      self.energies = np.random.choice(self.cache_energies,self.num_sites) #input a 1D array and size, output random sampling from the array 
