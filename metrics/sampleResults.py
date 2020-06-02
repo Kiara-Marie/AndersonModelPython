@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from abc import ABC
+import config
 from metrics.metric import Metric
 
 class SampleResults(Metric):
@@ -32,7 +33,8 @@ class SampleResults(Metric):
             
   def printResult(self, file_code):
     filename = file_code + "-Samples.csv"
-    self.samples.to_csv(filename, index=False, header=True, sep=',', encoding ='utf-8')
+    if (config.SAVE):
+      self.samples.to_csv(filename, index=False, header=True, sep=',', encoding ='utf-8')
     
       
 

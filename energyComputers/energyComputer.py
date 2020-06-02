@@ -10,5 +10,5 @@ class EnergyComputer(ABC):
     self.num_sites = num_sites
   
   @abstractmethod
-  def get_energies(self, file_code):
+  def get_energies(self):
     pass
