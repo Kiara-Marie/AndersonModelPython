@@ -8,7 +8,6 @@ class CalculatedRandomEnergies(EnergyComputer):
     super().__init__(num_sites)  
     self.desc= "Energies randomly sampled from a weighted distribution based on the transition energies between Rydberg states\n"
     self.cache = pd.read_csv("EnergyCache.csv")
-    print("hello")
 
   def compute_energies(self):
     probabilities = self.cache['degeneracy'] / sum(self.cache['degeneracy'])
