@@ -11,10 +11,9 @@ class SumOnsitesDecorator(EnergyComputer):
       using formula E_ij = e_ij - \sum{a,b != i,j}(e_ab)"
 
   def get_energies(self):
-    inner_energies = self.inner_ec.get_energies()
-    self.energies = inner_energies 
-    summed_energies = np.sum(inner_energies)
-    actual_energies = (inner_energies * 2) - summed_energies
+    self.energies = self.inner_ec.get_energies()
+    summed_energies = np.sum(self.energies)
+    actual_energies = (self.energies * 2) - summed_energies
     return actual_energies 
 
 
