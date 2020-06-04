@@ -4,7 +4,7 @@ from class_Numerov import Numerov
  
 
 class J_dipole(JComputer) :
-  def __init__(self, nnOnly, t, rdep):
+  def __init__(self, nnOnly, t, rdep, energy_computer):
     """ J_ij = t , or if rdep is true, J_ij = t/r^3
     t - self-explanatory
     rdep - whether or not to have J depend on r^3
@@ -22,7 +22,7 @@ class J_dipole(JComputer) :
   def jFinder(self, xi, xj):
     if (self.nnOnly and (xi - xj) > 1):
       return 0
-    r = (xi - xj)
+    r = 5*(xi - xj) 
     
     d_i=Numerov().Rad_int(n_1i,l_1i,n_2i,l_2i)
     d_j=Numerov().Rad_int(n_1j,l_1j,n_2j,l_2j)
