@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import config
+from numpy.random import default_rng
 from energyComputers.energyComputer import EnergyComputer
 
 class CalculatedRandomEnergies(EnergyComputer):
@@ -8,13 +10,11 @@ class CalculatedRandomEnergies(EnergyComputer):
     super().__init__(num_sites)  
     self.desc= "Energies randomly sampled from a weighted distribution based on the transition energies between Rydberg states\n"
     self.cache = pd.read_csv("EnergyCache.csv")
-
-  def compute_energies(self):
-    probabilities = self.cache['degeneracy'] / sum(self.cache['degeneracy'])
-    self.energies = np.random.choice(self.cache[' delta E in R*Z m^-1'],self.num_sites,p=probabilities)
+    self.rng = default_rng(config.SEED)
 
   def get_energies(self):
-    self.compute_energies()
+    probabilities = self.cache['degeneracy'] / sum(self.cache['degeneracy'])
+    self.energies = np.random.choice(self.cache[' delta E in R*Z m^-1'],self.num_sites,p=probabilities)
     return self.energies 
 
 
