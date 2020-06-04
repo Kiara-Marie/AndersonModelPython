@@ -23,6 +23,7 @@ def main():
   config.CAREFUL = vars(result)['c']
   config.SHOW = vars(result)['show']
   config.SAVE = vars(result)['save']
+  config.SEED = vars(result)['seed']
 
   print("Running %d iterations for %d sites with W = %d, and max_t = %f" %(iterations,num_sites, W, max_t))
 
@@ -65,6 +66,9 @@ def get_settings(W_default, iterations_default, num_sites_default, max_t_default
   parser.add_argument('--save', type=bool, nargs='?',
                         help = 'Whether to save results to file',
                         action='store', default=True)
+  parser.add_argument('--seed', type=int, nargs='?',
+                        help="Seed to provide to random number generator",
+                        action='store', default=None)
 
   result = parser.parse_args()
   return result
