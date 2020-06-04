@@ -1,3 +1,4 @@
+import numpy as np
 from energyComputers.energyComputer import EnergyComputer
 
 class SumOnsitesDecorator(EnergyComputer):

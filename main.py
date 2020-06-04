@@ -29,7 +29,7 @@ def main():
 
   energy_computer = sumOnsitesDecorator.SumOnsitesDecorator(calculatedRandom.CalculatedRandomEnergies(num_sites))
   
-  jComputer = lorentz.Lorentz(nnOnly=True, t=max_t, rdep=True, energy_computer=energy_computer, gamma=1)
+  jComputer = lorentz.Lorentz(nnOnly=False, t=max_t, rdep=True, energy_computer=energy_computer, gamma=1)
   level_spacings = levelSpacings.LevelSpacingStats(num_sites, iterations)
   sample_results = sampleResults.SampleResults(num_sites, iterations)
   metrics = [level_spacings, sample_results]
