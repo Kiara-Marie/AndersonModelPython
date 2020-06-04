@@ -8,6 +8,7 @@ class EnergyComputer(ABC):
     compute diagonal values by this energyComputer
     """
     self.num_sites = num_sites
+    self.energies = None
   
   @abstractmethod
   def get_energies(self):
