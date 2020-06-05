@@ -5,7 +5,7 @@ import config
 
 from simClass import Simulation
 from jComputers import constant, lorentz
-from energyComputers import uniformRandom, calculatedRandom, sumOnsitesFromCache
+from energyComputers import uniformRandom, calculatedRandom, sumOnsitesDecorator
 from metrics import levelSpacings, sampleResults
 
 def main():
@@ -23,12 +23,13 @@ def main():
   config.CAREFUL = vars(result)['c']
   config.SHOW = vars(result)['show']
   config.SAVE = vars(result)['save']
+  config.SEED = vars(result)['seed']
 
   print("Running %d iterations for %d sites with W = %d, and max_t = %f" %(iterations,num_sites, W, max_t))
 
-  energy_computer = sumOnsitesFromCache.SumOnsitesFromCache(num_sites)
+  energy_computer = sumOnsitesDecorator.SumOnsitesDecorator(calculatedRandom.CalculatedRandomEnergies(num_sites))
   
-  jComputer = lorentz.Lorentz(nnOnly=True, t=max_t, rdep=True, energy_computer=energy_computer, gamma=1)
+  jComputer = lorentz.Lorentz(nnOnly=False, t=max_t, rdep=True, energy_computer=energy_computer, gamma=1)
   level_spacings = levelSpacings.LevelSpacingStats(num_sites, iterations)
   sample_results = sampleResults.SampleResults(num_sites, iterations)
   metrics = [level_spacings, sample_results]
@@ -65,6 +66,9 @@ def get_settings(W_default, iterations_default, num_sites_default, max_t_default
   parser.add_argument('--save', type=bool, nargs='?',
                         help = 'Whether to save results to file',
                         action='store', default=True)
+  parser.add_argument('--seed', type=int, nargs='?',
+                        help="Seed to provide to random number generator",
+                        action='store', default=None)
 
   result = parser.parse_args()
   return result

@@ -1,4 +1,5 @@
-import numpy.random as random
+from numpy.random import default_rng
+import config
 from energyComputers.energyComputer import EnergyComputer
 
 class UniformRandomEnergies(EnergyComputer):
@@ -7,7 +8,8 @@ class UniformRandomEnergies(EnergyComputer):
     super().__init__(num_sites)
     self.W = W
     self.desc = "Onsite energies chosen from a uniform random distribution between -W/2 and W/2.\n"
+    self.rng = default_rng(config.SEED)
 
   def get_energies(self):
-    self.energies = random.uniform(-self.W/2, self.W/2, self.num_sites)
+    self.energies = self.rng.uniform(-self.W/2, self.W/2, self.num_sites)
     return self.energies
