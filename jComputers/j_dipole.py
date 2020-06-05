@@ -47,10 +47,13 @@ class J_dipole(JComputer) :
     n_2j=self.energy_computer.n2[xj]
     l_2j=self.energy_computer.l2[xj]
     
-    d_i=Numerov().Rad_int(n_1i,l_1i,n_2i,l_2i) # in atomic unit 
-    d_j=Numerov().Rad_int(n_1j,l_1j,n_2j,l_2j) # in atomic unit 
+    if self.energy_computer.energies[xi]*self.energy_computer.energies[xj]==0:
+        j=0
+    else:      
+        d_i=Numerov().Rad_int(n_1i,l_1i,n_2i,l_2i) # in atomic unit 
+        d_j=Numerov().Rad_int(n_1j,l_1j,n_2j,l_2j) # in atomic unit     
+        j = self.t*d_i*d_j
     
-    j = self.t*d_i*d_j
     if (self.rdep):
       j = j / (r*r*r)
     return j
