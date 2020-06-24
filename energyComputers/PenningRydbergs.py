@@ -40,7 +40,7 @@ class PeningRydbergs(EnergyComputer):
       self.lf_qds[self.lfs == i] = self.quantum_defects.get(i, 0)
     self.energy_0s = ((self.n0s - self.l0_qds)**-2)
     self.energy_fs = ((self.nfs - self.lf_qds)**-2)
-    self.energies = self.energy_fs - self.energy_0s
+    self.energies = 0.5*(self.energy_fs - self.energy_0s) #Ry =0.5 in atomic unit 
     return self.energies
     
 
@@ -50,15 +50,15 @@ class PeningRydbergs(EnergyComputer):
     
 #    self.n0s=np.random.choice(self.ns, self.num_sites, p=pdf)  #sample the first pqns
 #    np.rint(self.n0s, out=self.n0s)
-    n0s=np.zeros(self.num_sites)
-    l0s=np.zeros(self.num_sites)
-    nfs=np.zeros(self.num_sites)
-    lfs=np.zeros(self.num_sites)
+    n0s=np.zeros(self.num_sites,dtype=int)
+    l0s=np.zeros(self.num_sites,dtype=int)
+    nfs=np.zeros(self.num_sites,dtype=int)
+    lfs=np.zeros(self.num_sites,dtype=int)
     #need a for loop here 
     for xi in range(self.num_sites):
         n0s[xi]=np.random.choice(self.ns, 1, p=pdf) #sample pqn of initial state 
         l0s[xi]=np.random.choice(n0s[xi], 1) #uniform sample from l= 0 to n0-1
-        nfs[xi]=np.random.cnoice(self.ns, 1, p=self.second_distr(n0s[xi])) #sample pqn of final state near the initial state 
+        nfs[xi]=np.random.choice(self.ns, 1, p=self.second_distr(n0s[xi])) #sample pqn of final state near the initial state 
         lfs[xi]=np.random.choice(nfs[xi], 1) #uniform sample from l= 0 to nf-1
     self.n0s=n0s
     self.l0s=l0s
@@ -73,14 +73,14 @@ class PeningRydbergs(EnergyComputer):
       
       eden=penning_fraction/2; # electron produced per penning partner
       rden=1-penning_fraction # remaining Rydberg on pqn0 that is not penning ionized
-      self.ns=np.arange(self.MIN_N,self.MAX_N+1,dtype='int64')
+      self.ns=np.arange(self.MIN_N,self.MAX_N+1)
       
       n_bound=np.int(pqn0/2**0.5)    
       ns_lower=np.arange(self.MIN_N,n_bound,dtype='int64') #allowed lower n states after penning ionization
       indx=range(ns_lower.size)
       x=ns_lower/pqn0
 
-      nden=np.zeros(self.MAN_N-self.MIN_N+1) #initialize the distribution over n
+      nden=np.zeros(self.MAX_N-self.MIN_N+1) #initialize the distribution over n
       nden[indx]=eden*x**5/np.sum(x**5) #redistribute lower n's
       
       nden[self.ns==self.pqn0]=rden 
