@@ -40,7 +40,7 @@ class RandomRydbergs(EnergyComputer):
       self.lf_qds[self.lfs == i] = self.quantum_defects.get(i, 0)
     self.energy_0s = ((self.n0s - self.l0_qds)**-2)
     self.energy_fs = ((self.nfs - self.lf_qds)**-2)
-    self.energies = self.energy_fs - self.energy_0s
+    self.energies = 0.5*(self.energy_fs - self.energy_0s) #Ry =0.5 in atomic unit 
     return self.energies
     
 
@@ -48,7 +48,7 @@ class RandomRydbergs(EnergyComputer):
   def get_ns_and_ls(self):
     self.n0s = (self.MAX_N - self.MIN_N + 1) * self.rng.random(size=self.num_sites) + self.MIN_N
     np.rint(self.n0s, out=self.n0s)
-    self.l0s = self.rng.random(size=self.num_sites) * self.n0s
+    self.l0s = np.multiply(self.rng.random(size=self.num_sites),  self.n0s)
     np.rint(self.l0s, out=self.l0s)
   
     n_jumps = (self.MAX_JUMP - self.MIN_JUMP + 1) * self.rng.random(size=self.num_sites) + self.MIN_JUMP

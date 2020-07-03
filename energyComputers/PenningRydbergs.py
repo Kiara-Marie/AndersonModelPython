@@ -1,49 +1,16 @@
 import numpy as np
 #import config
 #from numpy.random import default_rng
-from energyComputers.energyComputer import EnergyComputer
+from energyComputers.randomRydbergs import RandomRydbergs
 
-class PeningRydbergs(EnergyComputer):
+class PenningRydbergs(RandomRydbergs):
   def __init__(self,num_sites):
     super().__init__(num_sites)  
-    self.desc= "Each site randomly assigned pqn_0 level from uniform distribution, \
+    self.desc= "Each site randomly assigned pqn_0 level from empirical distribution, \
       then pqn_f level, such that pqn_0 + MIN_JUMP <= pqn_f <= pqn_0 + MAX_JUMP \
       then choosing l_0 and l_f from random uniform distribution over allowed values based on \
       the values of pqn_0 and pqn_f. Onsite energy is equal to the energy gap between the initial \
       and final state, in units of ____ \n"
-
-    #self.rng = default_rng(config.SEED)
-    
-    self.MAX_N = 100
-    self.MIN_N = 1
-    self.MAX_JUMP = 1
-    self.MIN_JUMP = 0
-
-    self.quantum_defects = {  
-    # Quantum defect as determined by M. Bixon and J. Jortner,
-    # J. Chem. Phys. 105, 1363 ~1996.
-    0 : 1.21,
-    1 : 0.7286,
-    2 : -0.05,
-    # g as determined by  Murgu, E.; Martin, J. D. D.; Gallagher, T. F..
-    # The Journal of Chemical Physics 2001,115(15),7032–7040.
-    3 : 0.0101,
-    4 : 0}
-
-
-  def get_energies(self):
-    self.get_ns_and_ls()
-    self.l0_qds = np.zeros(self.num_sites) # Might be able to modify since there is alresdy a for loop to take use of. 
-    self.lf_qds = np.zeros(self.num_sites)
-    for i in range(4):
-      self.l0_qds[self.l0s == i] = self.quantum_defects.get(i, 0)
-      self.lf_qds[self.lfs == i] = self.quantum_defects.get(i, 0)
-    self.energy_0s = ((self.n0s - self.l0_qds)**-2)
-    self.energy_fs = ((self.nfs - self.lf_qds)**-2)
-    self.energies = 0.5*(self.energy_fs - self.energy_0s) #Ry =0.5 in atomic unit 
-    return self.energies
-    
-
 
   def get_ns_and_ls(self):
     pdf = self.penning_distr()
@@ -55,10 +22,13 @@ class PeningRydbergs(EnergyComputer):
     nfs=np.zeros(self.num_sites,dtype=int)
     lfs=np.zeros(self.num_sites,dtype=int)
     #need a for loop here 
+    # NOTE FROM KIARA: I think we should be able to do this without a for-loop
     for xi in range(self.num_sites):
         n0s[xi]=np.random.choice(self.ns, 1, p=pdf) #sample pqn of initial state 
         l0s[xi]=np.random.choice(n0s[xi], 1) #uniform sample from l= 0 to n0-1
+        # NOTE FROM KIARA: Why can't we just pick a jump from a uniform distribution?
         nfs[xi]=np.random.choice(self.ns, 1, p=self.second_distr(n0s[xi])) #sample pqn of final state near the initial state 
+        # NOTE FROM KIARA: Spectroscopic transition rules mean that delta(l) = (+/-)1, right?
         lfs[xi]=np.random.choice(nfs[xi], 1) #uniform sample from l= 0 to nf-1
     self.n0s=n0s
     self.l0s=l0s
