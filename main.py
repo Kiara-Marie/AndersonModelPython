@@ -28,7 +28,7 @@ def main():
 
   print("Running %d iterations for %d sites with W = %d, and max_t = %f" %(iterations,num_sites, W, max_t))
 
-  energy_computer = sumOnsitesDecorator.SumOnsitesDecorator(PenningRydbergs.PeningRydbergs(num_sites))
+  energy_computer = sumOnsitesDecorator.SumOnsitesDecorator(PenningRydbergs.PenningRydbergs(num_sites))
   
   jComputer = lorentz.Lorentz(nnOnly=False, t=max_t, rdep=True, energy_computer=energy_computer, gamma=1)
   level_spacings = levelSpacings.LevelSpacingStats(num_sites, iterations)

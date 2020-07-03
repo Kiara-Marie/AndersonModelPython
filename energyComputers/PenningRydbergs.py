@@ -1,6 +1,6 @@
 import numpy as np
-#import config
-#from numpy.random import default_rng
+import config
+from numpy.random import default_rng
 from energyComputers.randomRydbergs import RandomRydbergs
 
 class PenningRydbergs(RandomRydbergs):
@@ -12,32 +12,27 @@ class PenningRydbergs(RandomRydbergs):
       the values of pqn_0 and pqn_f. Onsite energy is equal to the energy gap between the initial \
       and final state, in units of ____ \n"
 
-  def get_ns_and_ls(self):
+  def get_ns_and_ls(self, upper_from_penning):
     pdf = self.penning_distr()
-    
-#    self.n0s=np.random.choice(self.ns, self.num_sites, p=pdf)  #sample the first pqns
-#    np.rint(self.n0s, out=self.n0s)
-    n0s=np.zeros(self.num_sites,dtype=int)
-    l0s=np.zeros(self.num_sites,dtype=int)
-    nfs=np.zeros(self.num_sites,dtype=int)
-    lfs=np.zeros(self.num_sites,dtype=int)
-    #need a for loop here 
-    # NOTE FROM KIARA: I think we should be able to do this without a for-loop
-    for xi in range(self.num_sites):
-        n0s[xi]=np.random.choice(self.ns, 1, p=pdf) #sample pqn of initial state 
-        l0s[xi]=np.random.choice(n0s[xi], 1) #uniform sample from l= 0 to n0-1
-        # NOTE FROM KIARA: Why can't we just pick a jump from a uniform distribution?
-        nfs[xi]=np.random.choice(self.ns, 1, p=self.second_distr(n0s[xi])) #sample pqn of final state near the initial state 
-        # NOTE FROM KIARA: Spectroscopic transition rules mean that delta(l) = (+/-)1, right?
-        lfs[xi]=np.random.choice(nfs[xi], 1) #uniform sample from l= 0 to nf-1
-    self.n0s=n0s
-    self.l0s=l0s
-    self.nfs=nfs
-    self.lfs=lfs
-    
+    self.n0s = self.rng.choice(self.ns, self.num_sites, p=pdf) #sample pqn of initial state 
+    self.l0s = np.multiply(self.rng.random(size=self.num_sites),  self.n0s)
 
+    if (upper_from_penning):
+        self.nfs = np.zeros(self.num_sites)
+        for xi in range(self.num_sites):
+             #sample pqn of final state near the initial state
+            self.nfs[xi]=self.rng.choice(self.ns, 1, p=self.penning_distr(min_pqn=self.n0s[xi])) 
+    else:
+        n_jumps = (self.MAX_JUMP - self.MIN_JUMP + 1) * self.rng.random(size=self.num_sites) + self.MIN_JUMP
+        np.floor(n_jumps, out=n_jumps)
+        self.nfs = self.n0s + n_jumps
     
-  def penning_distr(self, pqn0=50, penning_fraction=0.5): # penningfraction can be a function of n0. we can set it 0.5 for now.
+    # sample from 0-1, round to either 0 or 1, turn 0's into -1's
+    l_jumps = np.rint(self.rng.random(size=self.num_sites))
+    l_jumps[l_jumps == 0] -= 1
+    self.lfs = self.l0s + l_jumps     
+
+  def penning_distr(self, pqn0=50, penning_fraction=0.5, min_pqn=0): # penningfraction can be a function of n0. we can set it 0.5 for now.
       
       self.pqn0=pqn0
       
@@ -54,24 +49,14 @@ class PenningRydbergs(RandomRydbergs):
       nden[indx]=eden*x**5/np.sum(x**5) #redistribute lower n's
       
       nden[self.ns==self.pqn0]=rden 
-      self.pdf=nden/np.sum(nden)
-     
-      return self.pdf  # return the probalility distribution function over n's from MIN_N to MAX_N
-      
-  def second_distr(self, nearby_n0):
-      
-      orginal_pdf=self.pdf
-      n1=nearby_n0-self.MAX_JUMP
-      n2=nearby_n0-self.MIN_JUMP #Lower allowed region
-      
-      n3=nearby_n0+self.MIN_JUMP
-      n4=nearby_n0+self.MAX_JUMP # higher allowed region     
-      
-      filt=(self.ns >= n1) & (self.ns <= n2) & (self.ns >= n3) & (self.ns <= n4)
-      
-      new_pdf=orginal_pdf*filt  #allow only states around nearby_n0
-      self.second_pdf=new_pdf/np.sum(new_pdf) # norm to 1
-      return self.second_pdf
+      pdf=nden/np.sum(nden)
+      filt = pdf > min_pqn
+      pdf = pdf*filt  #allow only states above min_pqn 
+
+      # if no states are above min_pqn, then just make the only allowed state the max_n
+      if (np.all(pdf == 0)):
+          pdf[-1] = 1
+      return pdf  # return the probalility distribution function over n's from MIN_N to MAX_N
       
       
       
