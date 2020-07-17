@@ -1,15 +1,14 @@
 from abc import ABC
 from jComputers.jComputer import JComputer
 from class_Numerov import Numerov
+from energyComputers.sumOnsitesDecorator import SumOnsitesDecorator
 import numpy as np
 
  
 
 class J_dipole(JComputer) :
   def __init__(self, nnOnly, t, rdep, energy_computer):
-    """ J_ij = t , or if rdep is true, J_ij = t/r^3
-    t - self-explanatory
-    rdep - whether or not to have J depend on r^3
+    """ J_ij = t*<d_i><d_j>/r**3
     """ 
     # avg distance from one particle to next:
     #		(10^12) particles/cm^3
@@ -31,21 +30,25 @@ class J_dipole(JComputer) :
 
   def jFinder(self, xi, xj):
     # should only be called after this instance's energy_computer has had calculateEnergies called
+    if (isinstance(self.energy_computer,  SumOnsitesDecorator)):
+      ec = self.energy_computer.inner_ec
+    else:
+      ec = self.energy_computer
     if (self.energy_computer.energies is None):
       raise Exception("Attempted to use jComputer which needs energy, but energy not yet computed!")
     if (self.nnOnly and (xi - xj) > 1):
       return 0      
     r = 5*(xi - xj) 
     
-    n_1i=self.energy_computer.n1[xi]
-    l_1i=self.energy_computer.l1[xi]
-    n_2i=self.energy_computer.n2[xi]
-    l_2i=self.energy_computer.l2[xi]
+    n_1i= ec.n0s[xi]
+    l_1i= ec.l0s[xi]
+    n_2i= ec.nfs[xi]
+    l_2i= ec.lfs[xi]
     
-    n_1j=self.energy_computer.n1[xj]
-    l_1j=self.energy_computer.l1[xj]
-    n_2j=self.energy_computer.n2[xj]
-    l_2j=self.energy_computer.l2[xj]
+    n_1j= ec.n0s[xj]
+    l_1j= ec.l0s[xj]
+    n_2j= ec.nfs[xj]
+    l_2j= ec.lfs[xj]
     
     if self.energy_computer.energies[xi]*self.energy_computer.energies[xj]==0:
         j=0
