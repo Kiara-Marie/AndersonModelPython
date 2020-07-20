@@ -5,7 +5,8 @@ import config
 
 from simClass import Simulation
 from jComputers import constant, lorentz, j_dipole
-from energyComputers import uniformRandom, calculatedRandom, sumOnsitesDecorator, randomRydbergs
+#from energyComputers import uniformRandom, calculatedRandom, sumOnsitesDecorator, randomRydbergs
+from energyComputers import uniformRandom, calculatedRandom, sumOnsitesDecorator, randomRydbergs,PenningRydbergs
 from metrics import levelSpacings, sampleResults
 
 def main():
@@ -27,7 +28,7 @@ def main():
 
   print("Running %d iterations for %d sites with W = %d, and max_t = %f" %(iterations,num_sites, W, max_t))
 
-  energy_computer = sumOnsitesDecorator.SumOnsitesDecorator(randomRydbergs.RandomRydbergs(num_sites))
+  energy_computer = sumOnsitesDecorator.SumOnsitesDecorator(PenningRydbergs.PenningRydbergs(num_sites))
   
   jComputer = j_dipole.J_dipole(nnOnly=False, t=max_t, rdep=True, energy_computer=energy_computer)
   level_spacings = levelSpacings.LevelSpacingStats(num_sites, iterations)
