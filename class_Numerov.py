@@ -2,7 +2,7 @@
 """
 Created on Wed Nov 20 13:18:38 2019
 
-@author: User
+@author: Ruoxi
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -34,9 +34,19 @@ class Numerov:
         return -Ry/(n-delt)**2
             
             
-    def V(self, r, Z=15, alpha_1=1, alpha_d=0, rc=1):
-        
+    def V(self, r, Z=1, alpha_1=1, alpha_d=0, rc=1):
+        """ Computes the potential.
+        r = distance from e to core,
+        Z = net charge of the core,
+        alpha_1 = special coefficients related to decay of potential field specific to NO
+        alpha_d = core dipole polarizability 
+        rc = effective core size
+        """ 
+
+         # Coulomb potential
          Vc=-(1+(Z-1)*np.exp(-alpha_1*r))/r
+
+         # Core polarization potential 
          Vp=-alpha_d/2/r**4*(1-np.exp(-(r/rc)**6))
          
          return Vc+Vp
