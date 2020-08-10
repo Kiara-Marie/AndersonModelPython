@@ -44,12 +44,12 @@ class Numerov:
         """ 
 
          # Coulomb potential
-         Vc=-(1+(Z-1)*np.exp(-alpha_1*r))/r
+        Vc=-(1+(Z-1)*np.exp(-alpha_1*r))/r
 
          # Core polarization potential 
-         Vp=-alpha_d/2/r**4*(1-np.exp(-(r/rc)**6))
+        Vp=-alpha_d/2/r**4*(1-np.exp(-(r/rc)**6))
          
-         return Vc+Vp
+        return Vc+Vp
     
     
     def g(self, n,l,r):
