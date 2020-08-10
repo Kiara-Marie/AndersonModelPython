@@ -4,4 +4,5 @@ def load_from_npz(filename):
     f_id = open(filename, "rb")
     mat = sparse.load_npz(f_id)
     f_id.close()
-    return mat
+    to_ret = mat.tocsr()
+    return to_ret

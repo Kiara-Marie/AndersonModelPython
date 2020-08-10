@@ -4,7 +4,7 @@ import argparse
 import config
 
 from simClass import Simulation
-from jComputers import constant, lorentz
+from jComputers import constant, lorentz, dipole
 #from energyComputers import uniformRandom, calculatedRandom, sumOnsitesDecorator, randomRydbergs,PenningRydbergs
 from energyComputers import sumOnsitesDecorator, PenningRydbergs
 from metrics import levelSpacings, sampleResults
@@ -30,7 +30,7 @@ def main():
 
   energy_computer = sumOnsitesDecorator.SumOnsitesDecorator(PenningRydbergs.PenningRydbergs(num_sites))
   
-  jComputer = lorentz.Lorentz(nnOnly=False, t=max_t, rdep=True, energy_computer=energy_computer, gamma=1)
+  jComputer = dipole.Dipole(nnOnly=False, t=max_t, rdep=True, energy_computer=energy_computer)
   level_spacings = levelSpacings.LevelSpacingStats(num_sites, iterations)
   sample_results = sampleResults.SampleResults(num_sites, iterations)
   metrics = [level_spacings, sample_results]
