@@ -40,7 +40,9 @@ class RandomRydbergs(EnergyComputer):
       self.lf_qds[self.lfs == i] = self.quantum_defects.get(i, 0)
     self.energy_0s = ((self.n0s - self.l0_qds)**-2)
     self.energy_fs = ((self.nfs - self.lf_qds)**-2)
-    self.energies = 0.5*(self.energy_fs - self.energy_0s) #Ry =0.5 in atomic unit 
+    Ry=109735.31 
+    self.energies = Ry*(self.energy_fs - self.energy_0s) #Ry =0.5 in atomic unit Ry=109735.31 in cm^-1 for NO
+    self.energies=self.energies*29.9792458 # convert to GHz
     return self.energies
     
 

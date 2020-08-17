@@ -14,7 +14,8 @@ class CalculatedRandomEnergies(EnergyComputer):
 
   def get_energies(self):
     probabilities = self.cache['degeneracy'] / sum(self.cache['degeneracy'])
-    self.energies = np.random.choice(self.cache[' delta E in R*Z m^-1'],self.num_sites,p=probabilities)
+    self.energies = np.random.choice(self.cache['delta E in Hz'],self.num_sites,p=probabilities)
+    self.energies = self.energies/1e9  # convert to GHz
     return self.energies 
 
 

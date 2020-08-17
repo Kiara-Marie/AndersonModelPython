@@ -6,7 +6,7 @@ class UniformRandomEnergies(EnergyComputer):
 
   def __init__(self, W, num_sites):
     super().__init__(num_sites)
-    self.W = W
+    self.W = W  # The default unit for W is GHz
     self.desc = "Onsite energies chosen from a uniform random distribution between -W/2 and W/2.\n"
     self.rng = default_rng(config.SEED)
 
