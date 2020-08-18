@@ -49,13 +49,15 @@ class PenningRydbergs(RandomRydbergs):
       nden[indx]=eden*x**5/np.sum(x**5) #redistribute lower n's
       
       nden[self.ns==self.pqn0]=rden 
-      pdf=nden/np.sum(nden)
-      filt = pdf > min_pqn
+      pdf=nden
+      filt = self.ns > min_pqn
       pdf = pdf*filt  #allow only states above min_pqn 
 
       # if no states are above min_pqn, then just make the only allowed state the max_n
       if (np.all(pdf == 0)):
           pdf[-1] = 1
+      else:
+        pdf = pdf / np.sum(pdf)
       return pdf  # return the probalility distribution function over n's from MIN_N to MAX_N
       
       
