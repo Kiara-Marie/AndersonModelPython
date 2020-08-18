@@ -42,7 +42,8 @@ class RandomRydbergs(EnergyComputer):
     self.energy_fs = ((self.nfs - self.lf_qds)**-2)
     Ry=109735.31 
     self.energies = Ry*(self.energy_fs - self.energy_0s) #Ry =0.5 in atomic unit Ry=109735.31 in cm^-1 for NO
-    self.energies=self.energies*29.9792458 # convert to GHz
+    c = 29.9792458 # cm / nanosecond 
+    self.energies=self.energies*c # convert to GHz 
     return self.energies
     
 

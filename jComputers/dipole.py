@@ -21,10 +21,10 @@ class Dipole(JComputer) :
     self.numerov_cache = lfnpz.load_from_npz("numerov_cache.npz")
     #self.numerov_cache = self.numerov_cache.toarray()
     if (rdep):
-      self.desc = "j_ij = 	(t * dipole moment n0 * dipole moment nf) / r**3, \
+      self.desc = "j_ij = 	(t * dipole moment transition i * dipole moment transition j) / r**3, \
       with t = %f" % (t)
     else:
-      self.desc =  "j_ij = 	(t * dipole moment n0 * dipole moment nf), \
+      self.desc =  "j_ij = 	(t * dipole moment transition i * dipole moment transition j), \
       with t = %f" % (t)
     if (self.nnOnly):
       self.desc = self.desc + "j_ij on nearest neighbours only\n" 
