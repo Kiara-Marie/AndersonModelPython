@@ -32,7 +32,7 @@ class RandomRydbergs(EnergyComputer):
 
 
   def get_energies(self):
-    self.get_ns_and_ls(False)
+    self.get_ns_and_ls()
     self.l0_qds = np.zeros(self.num_sites)
     self.lf_qds = np.zeros(self.num_sites)
     for i in range(4):
@@ -48,7 +48,7 @@ class RandomRydbergs(EnergyComputer):
     
 
 
-  def get_ns_and_ls(self, trash):
+  def get_ns_and_ls(self):
     self.n0s = (self.MAX_N - self.MIN_N + 1) * self.rng.random(size=self.num_sites) + self.MIN_N
     np.rint(self.n0s, out=self.n0s)
     self.l0s = np.multiply(self.rng.random(size=self.num_sites),  self.n0s)

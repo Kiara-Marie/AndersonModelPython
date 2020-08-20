@@ -2,22 +2,25 @@ import numpy as np
 import config
 from numpy.random import default_rng
 from energyComputers.randomRydbergs import RandomRydbergs
+import matplotlib.pyplot as plt
 
 class PenningRydbergs(RandomRydbergs):
-  def __init__(self,num_sites):
+  def __init__(self,num_sites, upper_from_penning):
     super().__init__(num_sites)  
     self.desc= "Each site randomly assigned pqn_0 level from empirical distribution, \
       then pqn_f level, such that pqn_0 + MIN_JUMP <= pqn_f <= pqn_0 + MAX_JUMP \
       then choosing l_0 and l_f from random uniform distribution over allowed values based on \
       the values of pqn_0 and pqn_f. Onsite energy is equal to the energy gap between the initial \
       and final state, in units of ____ \n"
+    self.upper_from_penning = upper_from_penning
+    self.ns=np.arange(self.MIN_N,self.MAX_N+1)
 
-  def get_ns_and_ls(self, upper_from_penning):
+  def get_ns_and_ls(self):
     pdf = self.penning_distr()
     self.n0s = self.rng.choice(self.ns, self.num_sites, p=pdf) #sample pqn of initial state 
     self.l0s = np.multiply(self.rng.random(size=self.num_sites),  self.n0s)
 
-    if (upper_from_penning):
+    if (self.upper_from_penning):
         self.nfs = np.zeros(self.num_sites)
         for xi in range(self.num_sites):
              #sample pqn of final state near the initial state
@@ -38,7 +41,7 @@ class PenningRydbergs(RandomRydbergs):
       
       eden=penning_fraction/2; # electron produced per penning partner
       rden=1-penning_fraction # remaining Rydberg on pqn0 that is not penning ionized
-      self.ns=np.arange(self.MIN_N,self.MAX_N+1)
+      
       
       n_bound=np.int(pqn0/2**0.5)    
       ns_lower=np.arange(self.MIN_N,n_bound,dtype='int64') #allowed lower n states after penning ionization
@@ -58,6 +61,8 @@ class PenningRydbergs(RandomRydbergs):
           pdf[-1] = 1
       else:
         pdf = pdf / np.sum(pdf)
+      plt.hist(x=self.ns, weights=pdf, density=True)
+      plt.show()
       return pdf  # return the probalility distribution function over n's from MIN_N to MAX_N
       
       
